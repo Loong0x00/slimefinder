@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "slimefinder",
+	"version": "${version}",
+	"name": "SlimeFinder",
+	"description": "A Fabric mod for finding slime chunks in Minecraft 1.21. Use /slimefinder save <radius> to scan and save slime chunk coordinates.",
+	"authors": [
+		"SlimeFinder Developer"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/slimefinder/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"slimefinder.example.Slimefinder"
+		]
+	},
+	"mixins": [
+		"slimefinder.mixins.json",
+		{
+			"config": "slimefinder.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
