@@ -71,49 +71,56 @@ return random.nextInt(10) == 0;
 
 项目包含一个Python分析工具 `slime_analyzer.py`，用于分析史莱姆区块分布并优化农场位置。
 
-### 功能特性
+### 运行环境
 
-- **区域优化分析**：在指定大小的区域内找到史莱姆区块最多或最少的位置
-- **约束条件支持**：支持坐标整除约束（如区块对齐）
-- **距离优化**：在多个最优解中选择距离原点最近的位置
-- **高性能算法**：使用二维前缀和算法，支持大范围快速扫描
-- **进度显示**：使用tqdm显示扫描进度
-
-### 使用方法
-
-1. **安装依赖**：
 ```bash
 pip install numpy tqdm
 ```
 
-2. **运行分析**：
+### 参数说明
+
+- `area_w`: 分析区域的宽度（区块数）
+- `area_h`: 分析区域的高度（区块数）
+- `mode`: 搜索模式，`"max"` 寻找史莱姆区块最多的区域，`"min"` 寻找最少的区域
+- `align`: 坐标对齐约束，左上角坐标必须能被此值整除（默认为1，即无约束）
+
+### 使用示例
+
+**示例1：寻找17x17区域内史莱姆区块最多的位置（史莱姆农场优化）**
 ```python
-# 导入工具
 from slime_analyzer import *
 
-# 解析史莱姆区块文件
 slime_chunks = parse_slime_file("slime_chunks.txt")
-
-# 找到17x17区域内史莱姆区块最多的位置
-best_area, best_count, best_chunks = find_best_area(slime_chunks, 17, 17, mode="max")
-print(f"最多史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
-
-# 找到16x8区域内史莱姆区块最少的位置（适合建造非史莱姆农场）
-best_area, best_count, best_chunks = find_best_area(slime_chunks, 16, 8, mode="min")
-print(f"最少史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
-
-# 带约束条件的搜索（左上角坐标必须能被8整除）
 best_area, best_count, best_chunks, candidates = find_best_area_with_constraint(
-    slime_chunks, area_w=16, area_h=8, mode="min", align=8
+    slime_chunks,
+    area_w=17,
+    area_h=17,
+    mode="max",
+    align=1
 )
+
+print(f"最多史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
+print("该区域内的史莱姆区块如下：")
+print(format_chunk_output(best_chunks))
 ```
 
-### 应用场景
+**示例2：寻找16x8区域内史莱姆区块最少且坐标对齐的位置（建筑规划）**
+```python
+from slime_analyzer import *
 
-- **史莱姆农场优化**：找到史莱姆区块密度最高的区域建造农场
-- **建筑规划**：找到史莱姆区块最少的区域避免史莱姆干扰
-- **区块对齐**：确保农场或建筑与区块边界对齐
-- **多方案比较**：获取所有最优解候选进行比较
+slime_chunks = parse_slime_file("slime_chunks.txt")
+best_area, best_count, best_chunks, candidates = find_best_area_with_constraint(
+    slime_chunks,
+    area_w=16,
+    area_h=8,
+    mode="min",
+    align=8
+)
+
+print(f"最少史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
+print("该区域内的史莱姆区块如下：")
+print(format_chunk_output(best_chunks))
+```
 
 ## 技术要求
 

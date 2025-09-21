@@ -121,35 +121,7 @@ def format_chunk_output(chunks):
 
 if __name__ == "__main__":
     filename = "slime_chunks.txt"
-    slime_chunks = parse_slime_file(filename)
-
-    # 示例：找 17x17 内最多史莱姆区块的区域
-    #best_area, best_count, best_chunks = find_best_area(slime_chunks, 17, 17, mode="max")
-    #print(f"\n最多史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
-    #print("该区域内的史莱姆区块如下：")
-    #print(format_chunk_output(best_chunks))
-
-    #print("\n" + "="*50 + "\n")
-
-    # 示例：找 16x8 内最少史莱姆区块的区域
-    #best_area, best_count, best_chunks = find_best_area(slime_chunks, 16, 8, mode="min")
-    #print(f"最少史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
-    #print("该区域内的史莱姆区块如下：")
-    #print(format_chunk_output(best_chunks))
-
-    # 示例：找 16x8 内最少史莱姆区块的区域,并且左上角区块可以被八整除
-    #best_area, best_count, best_chunks = find_best_area_with_constraint(
-    #slime_chunks,
-    #area_w=16,
-    #area_h=8,
-    #mode="min",
-    #align=8  # 要求左上角能被8整除
-    #)
-
-    #print(f"最少史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
-    #print("该区域内的史莱姆区块如下：")
-    #print(format_chunk_output(best_chunks))
-    
+    slime_chunks = parse_slime_file(filename)    
     
     #找出16*8范围内史莱姆区块最少的区域,同时左上角坐标可以被8整除,同时标出欧几里得距离距原点最近的
     #best_area, best_count, best_chunks, candidates = find_best_area_with_constraint(
@@ -169,12 +141,19 @@ if __name__ == "__main__":
         #print(c, "距离原点:", math.sqrt(c[0]**2 + c[1]**2))
 
 
-    best_area, best_count, best_chunks = find_best_area(slime_chunks, 17, 17, mode="max")
-    print(f"最少史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
+    best_area, best_count, best_chunks, candidates = find_best_area_with_constraint(
+        slime_chunks,
+        area_w=17,
+        area_h=17,
+        mode="max",   # 找最多史莱姆区块的区域
+        align=1       # 不要求对齐，可以设置为8表示必须是8的倍数
+    )
+
+    print(f"最多史莱姆区块区域左上角: {best_area}, 数量: {best_count}")
     print("该区域内的史莱姆区块如下：")
     print(format_chunk_output(best_chunks))
 
     print("\n所有候选最优区域：")
     for c in candidates:
-        print(c, "距离原点:", math.sqrt(c[0]**2 + c[1]**2))
-
+        dist = (c[0]**2 + c[1]**2) ** 0.5
+        print(c, "距离原点:", dist)
